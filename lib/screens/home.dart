@@ -9,6 +9,7 @@ import 'dart:io';
 
 import 'package:onthefence/models/post.dart';
 import 'package:onthefence/screens/show-post.dart';
+import 'package:onthefence/services/shared-prefs.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class HomePage extends StatefulWidget {
@@ -86,7 +87,9 @@ class _HomePageState extends State<HomePage> {
         //
 
         for(var x in json.decode(response.body)) {
-          posts.add(Post.fromJson(x));
+          Post post = Post.fromJson(x);
+          posts.add(post);
+          getPostReadStatus(post);
         }
 
       });
@@ -94,6 +97,15 @@ class _HomePageState extends State<HomePage> {
       return null;
     } else {
       throw Exception('Failed to load post');
+    }
+  }
+
+  void getPostReadStatus(Post post) async {
+    bool read = await SharedPrefs.getPostReadStatus(post.id);
+    if (read) {
+      setState(() {
+        post.isRead = true;
+      });
     }
   }
 
@@ -219,14 +231,7 @@ class _HomePageState extends State<HomePage> {
       */
 
       var item = GestureDetector(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => ShowPostPage(item: posts[i],category: categories[posts[i].category].name,)
-              ),
-            );
-          },
+          onTap: () => openPostScreen(posts[i]),
           child: new Container(
               padding: EdgeInsets.fromLTRB(0, 120, 100, 0),
               decoration: BoxDecoration(image: DecorationImage(image: posts[i].image.image,fit: BoxFit.cover)),
@@ -240,8 +245,7 @@ class _HomePageState extends State<HomePage> {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: <Widget>[
 
-                    Html(data: posts[i].title,defaultTextStyle: TextStyle(fontSize: 25,fontWeight: FontWeight.w700,color: Color(0xFFe94828),fontFamily: 'Lucida'),padding: EdgeInsets.fromLTRB(0, 0, 0, 0),),
-
+                    postTitle(posts[i])
                   ],
                 ),
               )
@@ -250,6 +254,45 @@ class _HomePageState extends State<HomePage> {
 
     }
     return items;
+  }
+
+  openPostScreen(Post post) async {
+    final Post postResult = await Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => ShowPostPage(item: post, category: categories[post.category].name,)
+      ),
+    );
+    if (postResult.isRead) {
+      setState(() {});
+    }
+  }
+
+  Widget postTitle(Post post){
+    if (post.isRead) {
+      return Html(
+        data: post.title,
+        defaultTextStyle: TextStyle(
+          fontSize: 25,
+          fontWeight: FontWeight.w700,
+          color: Colors.black54,
+          fontFamily: 'Lucida'
+        ),
+        padding: EdgeInsets.fromLTRB(0, 0, 0, 0)
+      );
+    } else {
+      return Html(
+        data: post.title,
+        defaultTextStyle: TextStyle(
+          fontSize: 25,
+          fontWeight: FontWeight.w700,
+          color: Color(0xFFe94828),
+          fontFamily: 'Lucida'
+        ),
+        padding: EdgeInsets.fromLTRB(0, 0, 0, 0)
+      );
+    }
+
   }
 
 

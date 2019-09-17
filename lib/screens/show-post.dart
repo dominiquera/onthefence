@@ -5,6 +5,7 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:http/http.dart';
 import 'package:onthefence/models/comment.dart';
 import 'package:onthefence/models/post.dart';
+import 'package:onthefence/services/shared-prefs.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -22,6 +23,8 @@ class ShowPostPage extends StatefulWidget {
 
 class _ShowPostPageState extends State<ShowPostPage> {
 
+  Post item;
+
   bool _liked = false;
   String _likes = "";
   List<Comment> comments = new List();
@@ -32,10 +35,18 @@ class _ShowPostPageState extends State<ShowPostPage> {
   @override
   void initState() {
     super.initState();
+    item = widget.item;
+
     _loadLiked();
     fetchLikes();
+    setPostRead();
     //comment();
     fetchComments();
+  }
+
+  setPostRead(){
+    SharedPrefs.setPostReadStatus(widget.item.id);
+    item.isRead = true;
   }
 
   _loadLiked() async {
@@ -180,6 +191,10 @@ class _ShowPostPageState extends State<ShowPostPage> {
 
           },)],crossAxisAlignment: CrossAxisAlignment.center,mainAxisAlignment: MainAxisAlignment.center,),
           titleSpacing: 0.0,
+          automaticallyImplyLeading: false,
+          leading: IconButton(icon: Icon(Icons.arrow_back_ios, color: Colors.white,), onPressed: () {
+            Navigator.pop(context, item);
+          },),
         ),
         body: ListView(
           scrollDirection: Axis.vertical,

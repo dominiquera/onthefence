@@ -10,6 +10,7 @@ class Post {
   final Image image;
   final int category;
   final String author;
+  bool isRead = false;
 
   final _dateFormatter = DateFormat('dd.MM.yyyy');
 
