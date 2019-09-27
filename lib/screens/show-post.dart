@@ -182,8 +182,6 @@ class _ShowPostPageState extends State<ShowPostPage> {
 
   @override
   Widget build(BuildContext context) {
-
-
     return Scaffold(
         appBar: AppBar(
           title: Column(children: <Widget>[Html(data:widget.item.title, defaultTextStyle: TextStyle(fontFamily: 'Lucida'),customTextStyle: (element,style) {
@@ -234,7 +232,12 @@ class _ShowPostPageState extends State<ShowPostPage> {
                 ],
               ),
             ),
-
+            Padding(
+              padding: const EdgeInsets.fromLTRB(10, 0, 15, 5),
+              child: Text(
+                  "Posted on ${widget.item.dateFormatted()}, ${widget.item.author}",
+                  style: TextStyle(color: Colors.grey)),
+            ),
             Html(data: widget.item.content,padding: EdgeInsets.fromLTRB(10, 0, 15, 5),
               onLinkTap: (url) {
                 print(url);
@@ -250,13 +253,9 @@ class _ShowPostPageState extends State<ShowPostPage> {
               },),
             Padding(
               padding: const EdgeInsets.fromLTRB(10, 0, 15, 5),
-              child: Row(
-                  children: <Widget>[
-                    Text(
-                        "Posted on ${widget.item.dateFormatted()}, ${widget.item.author}",
-                        style: TextStyle(color: Colors.grey))
-                  ]
-              ),
+              child: Text(
+                "Posted on ${widget.item.dateFormatted()}, ${widget.item.author}",
+                style: TextStyle(color: Colors.grey)),
             ),
             Row(
                 children: <Widget>[

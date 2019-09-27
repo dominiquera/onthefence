@@ -232,23 +232,41 @@ class _HomePageState extends State<HomePage> {
 
       var item = GestureDetector(
           onTap: () => openPostScreen(posts[i]),
-          child: new Container(
-              padding: EdgeInsets.fromLTRB(0, 120, 100, 0),
-              decoration: BoxDecoration(image: DecorationImage(image: posts[i].image.image,fit: BoxFit.cover)),
-              //decoration: BoxDecoration(image: DecorationImage(image: posts[i].image.image,fit: BoxFit.cover),border: Border.all(color: Color(0xFFFFFFFF),width: 4)),
-              margin: EdgeInsets.fromLTRB(0, 0, 0, 15),
+          child: Stack(
+            children: [
+              Container(
+                padding: EdgeInsets.fromLTRB(0, 120, 100, 0),
+                decoration: BoxDecoration(image: DecorationImage(image: posts[i].image.image,fit: BoxFit.cover)),
+                //decoration: BoxDecoration(image: DecorationImage(image: posts[i].image.image,fit: BoxFit.cover),border: Border.all(color: Color(0xFFFFFFFF),width: 4)),
+                margin: EdgeInsets.fromLTRB(0, 0, 0, 15),
+                child: Container(
+                  decoration: BoxDecoration(color: Color.fromARGB(150, 255, 255, 255)),
+                  padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: <Widget>[
+                      postTitle(posts[i])
+                    ],
+                  ),
+                )
+            ),
+            Positioned(
+              top: 0,
+              right: 0,
               child: Container(
+                padding: EdgeInsets.all(5),
                 decoration: BoxDecoration(color: Color.fromARGB(150, 255, 255, 255)),
-                padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: <Widget>[
-
-                    postTitle(posts[i])
-                  ],
+                child: Text(
+                  posts[i].dateFormatted(),
+                  style: TextStyle(
+                    color: Colors.black87,
+                    fontSize: 16
+                  ),
                 ),
               )
+            ),
+          ],
           ));
       items.add(item);
 
@@ -269,30 +287,16 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget postTitle(Post post){
-    if (post.isRead) {
-      return Html(
-        data: post.title,
-        defaultTextStyle: TextStyle(
-          fontSize: 25,
-          fontWeight: FontWeight.w700,
-          color: Colors.black54,
-          fontFamily: 'Lucida'
-        ),
-        padding: EdgeInsets.fromLTRB(0, 0, 0, 0)
-      );
-    } else {
-      return Html(
-        data: post.title,
-        defaultTextStyle: TextStyle(
-          fontSize: 25,
-          fontWeight: FontWeight.w700,
-          color: Color(0xFFe94828),
-          fontFamily: 'Lucida'
-        ),
-        padding: EdgeInsets.fromLTRB(0, 0, 0, 0)
-      );
-    }
-
+    return Html(
+      data: post.title,
+      defaultTextStyle: TextStyle(
+        fontSize: 25,
+        fontWeight: FontWeight.w700,
+        color: post.isRead ? Colors.black54 : Color(0xFFe94828),
+        fontFamily: 'Lucida'
+      ),
+      padding: EdgeInsets.fromLTRB(0, 0, 0, 0)
+    );
   }
 
 
