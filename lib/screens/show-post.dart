@@ -184,7 +184,7 @@ class _ShowPostPageState extends State<ShowPostPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Column(children: <Widget>[Html(data:widget.item.title, defaultTextStyle: TextStyle(fontFamily: 'Lucida'),customTextStyle: (element,style) {
+          title: Column(children: <Widget>[Html(data:widget.item.title, defaultTextStyle: TextStyle(fontFamily: 'Lucida',fontSize: 14),customTextStyle: (element,style) {
             return TextStyle(fontFamily: 'Lucida',fontWeight: FontWeight.w700);
 
           },)],crossAxisAlignment: CrossAxisAlignment.center,mainAxisAlignment: MainAxisAlignment.center,),
